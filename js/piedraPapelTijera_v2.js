@@ -4,21 +4,21 @@ var Game = {};
 
 (function() {
     var buttons,
-        ganaA = {
-            "rock" : ["scissors","lizard"],
-            "scissors" : ["lizard","paper"],
-            "paper" : ["rock","spock"],
-            "spock" : ["rock", "scissors"],
-            "lizard" : ["spock", "paper"]
-        },
         computerSelected,
-        playerSelected,
-        result;
+        data = [
+            { select:"rock", ganaA:["scissors","lizard"] },
+            { select:"paper", ganaA:["rock","spock"] },
+            { select:"scissors", ganaA:["lizard","paper"] },
+            { select:"lizard", ganaA:["spock", "paper"] },
+            { select:"spock", ganaA:["rock", "scissors"] }
+        ],
+        userSelected,
+        resultUser,
+        resultComputer;
 
     var computer = function() {
-        var options = ["rock", "scissors", "paper", "spock", "lizard"];
-        computerSelected = options[ parseInt(Math.random() * 5) ];
-        resultComputer.innerHTML = document.getElementById(computerSelected).innerHTML;
+        computerSelected = parseInt(Math.random() * 5);
+        resultComputer.innerHTML = document.getElementById( data[computerSelected].select ).innerHTML;
         verify();
     };
 
@@ -31,39 +31,34 @@ var Game = {};
 
     var selectOption = function() {
         Game.reset();
-
-        playerSelected = this.id;
-        result.innerHTML = document.getElementById( playerSelected ).innerHTML;
+        resultUser.innerHTML = document.getElementById( this.id ).innerHTML;
+        userSelected = this.getAttribute("data-value");
         computer();
     };
 
     var verify = function () {
-
-        if ( playerSelected == computerSelected ){
-            result.setAttribute('style', 'border: 8px solid red !important');
+        if ( userSelected == computerSelected ){
+            resultUser.setAttribute('style', 'border: 8px solid red !important');
             resultComputer.setAttribute('style', 'border: 8px solid red !important');
-        }else if ( ganaA[playerSelected].indexOf(computerSelected) != -1 ){
-            result.setAttribute('style', 'border: 8px solid red !important');
+        }else if ( data[userSelected].ganaA.indexOf( data[computerSelected].select ) != -1 ){
+            resultUser.setAttribute('style', 'border: 8px solid red !important');
         }else{
             resultComputer.setAttribute('style', 'border: 8px solid red !important');
         }
     };
 
     this.reset = function () {
-        result.setAttribute('style', 'border: 8px solid grey !important');
+        resultUser.setAttribute('style', 'border: 8px solid grey !important');
         resultComputer.setAttribute('style', 'border: 8px solid grey !important');
     }
 
     this.initialize = function() {
-        var info = document.getElementById('info');
-
-        result = document.getElementById('result');
+        resultUser = document.getElementById('resultUser');
+        resultComputer = document.getElementById('resultComputer');
         buttons = document.getElementsByClassName('button');
         human();
     }
-
 }).call(Game)
-
 
 window.onload = function() {
     Game.initialize();
